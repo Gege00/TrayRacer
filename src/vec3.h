@@ -3,7 +3,7 @@
 
 namespace math {
 
-	class vec3 {
+	struct vec3 {
 
 	public:
 
@@ -22,6 +22,9 @@ namespace math {
 		inline vec3& operator*=(const float f);
 		inline vec3& operator/=(const float f);
 
+		inline friend vec3 operator *(const vec3& v1, const vec3& v2) {
+			return vec3(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
+		}
 
 		inline friend vec3 operator+(const vec3& v1, const vec3& v2) {
 			return vec3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
@@ -33,6 +36,8 @@ namespace math {
 		inline friend vec3 operator*(const vec3& v, float t) {
 			return vec3(v.x*t, v.y*t, v.z*t);
 		}
+
+		
 		inline friend vec3 operator*( float t, const vec3& v) {
 			return v * t;
 		}

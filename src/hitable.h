@@ -2,11 +2,14 @@
 
 #include "ray.h"
 
+class Material;
+
 struct hitRecord {
 
 	float t;
 	math::vec3 p;
 	math::vec3 normal;
+	Material *matPtr;
 };
 
 
