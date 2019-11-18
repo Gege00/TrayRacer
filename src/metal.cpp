@@ -12,6 +12,4 @@ bool Metal::scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenua
 
 
 
-math::vec3 Metal::reflect(const math::vec3& v, const math::vec3& n) const {
-	return v - 2 * math::dot(v, n)*n;
-}
+

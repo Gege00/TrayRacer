@@ -16,6 +16,6 @@ public:
 
 	virtual bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const;
 	 
-	math::vec3 reflect(const math::vec3& v,const math::vec3& n) const;
+	
 	
 };

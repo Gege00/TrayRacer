@@ -1,7 +1,9 @@
+#ifndef  _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
 #include <iostream>
 #include <fstream>
 #include <cfloat>
-#include <random>
 
 
 #include "vec3.h"
@@ -11,7 +13,9 @@
 #include "camera.h"
 #include "metal.h"
 #include "diffuse.h"
-
+#include "dielectric.h"
+#include "utils.h"
+#include "math.h"
 
 math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 	hitRecord tRec;
@@ -31,6 +35,47 @@ math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 }
 
 
+Hitable *random_scene() {
+	int n = 100;
+	Hitable **list = new Hitable*[n + 1];
+	list[0] = new Sphere(math::vec3(0, -1000, 0), 1000, new Diffuse(math::vec3(0.5, 0.5, 0.5)));
+	int i = 1;
+	for (int a = -11; a < 11; a++) {
+		for (int b = -11; b < 11; b++) {
+			float choose_mat = utils::randDouble();
+			math::vec3 center(a + utils::randDouble(), 0.2, b + 0.9*utils::randDouble());
+			if ((center - math::vec3(4, 0.2, 0)).length() > 0.9) {
+				if (choose_mat < 0.8) {  // diffuse
+					list[i++] = new Sphere(center, 0.2,
+						new Diffuse(math::vec3(
+							utils::randDouble()*utils::randDouble(),
+							utils::randDouble()*utils::randDouble(),
+							utils::randDouble()*utils::randDouble())
+						)
+					);
+				}
+				else if (choose_mat < 0.95) { // metal
+					list[i++] = new Sphere(center, 0.2,
+						new Metal(math::vec3(0.5*(1 + utils::randDouble()),
+							0.5*(1 + utils::randDouble()),
+							0.5*(1 + utils::randDouble())),
+							0.5*utils::randDouble()));
+				}
+				else {  // glass
+					list[i++] = new Sphere(center, 0.2, new Dielectric(1.5));
+				}
+			}
+		}
+	}
+
+	list[i++] = new Sphere(math::vec3(0, 1, 0), 1.0, new Dielectric(1.5));
+	list[i++] = new Sphere(math::vec3(-4, 1, 0), 1.0, new Diffuse(math::vec3(0.4, 0.2, 0.1)));
+	list[i++] = new Sphere(math::vec3(4, 1, 0), 1.0, new Metal(math::vec3(0.7, 0.6, 0.5), 0.0));
+
+	return new Hitablelist(list, i);
+}
+
+
 
 int main() {
 
@@ -40,19 +85,21 @@ int main() {
 	std::ofstream outfile("render.ppm", std::ios_base::out);
 	outfile << "P3\n" << nX << " " << nY << "\n255\n";
 	std::cout << "P3\n" << nX << " " << nY << "\n255\n";
-	Hitable *hList[4];
-	hList[0] = new Sphere(math::vec3(0, 0, -1), 0.5, new Diffuse(math::vec3(0.8,0.3,0.3)));
-	hList[1] = new Sphere(math::vec3(0, -100.5, -1), 100, new Diffuse(math::vec3(0.8,0.8,0.0)));
-	hList[2] = new Sphere(math::vec3(1, 0, -1), 0.5, new Metal(math::vec3(0.8,0.6,0.2),0.01f));
-	hList[3] = new Sphere(math::vec3(-1, 0, -1), 0.5, new Metal(math::vec3(0.8),1.0f));
+
+
+	float R = cos(M_PI / 4);
+			
+	//hList[0] = new Sphere(math::vec3(-R,0,-1), R, new Diffuse(math::vec3(0, 0, 1)));
+	//hList[1] = new Sphere(math::vec3(R, 0, -1), R, new Diffuse(math::vec3(1, 0, 0)));
 
 	
-	Hitable *w = new Hitablelist(hList, 4);
+	Hitable *w = random_scene();
+	math::vec3 lookFrom(3, 3, 2);
+	math::vec3 lookAt(0, 0, -1);
+	
 
-	Camera cam;
-	std::default_random_engine e{};
-	std::mt19937 gen(e);
-	std::uniform_real_distribution<double> d{ 0,1 };
+	Camera cam(lookFrom,lookAt,math::vec3(0,1,0),90,(float)nX/(float)nY,2.0f, (lookFrom - lookAt).length());
+
 
 	for (int j = nY - 1; j >= 0; j--) {
 		for (int i = 0; i < nX; i++) {
@@ -61,8 +108,8 @@ int main() {
 				/*float u = float(i + ((double)rand() / (RAND_MAX))) / float(nX);
 				float v = float(j + ((double)rand() / (RAND_MAX))) / float(nY);*/
 				
-				float u = float(i + d(e))/ float(nX);
-				float v = float(j + d(e))/ float(nY);
+				float u = float(i + utils::randDouble())/ float(nX);
+				float v = float(j + utils::randDouble())/ float(nY);
 				Ray ray = cam.getRay(u, v);
 				c = c + color(ray, w,0);
 			}
