@@ -15,7 +15,7 @@ public:
 		:center(center), radius(radius), materialPtr(matPtr) {};
 
 	virtual bool hit(const Ray& ray, float t_min, float t_max, hitRecord& hit) const;
-
+	virtual bool boundingBox(float t0, float t1, AABB& aabb) const;
 
 	static math::vec3 randomPointInUnitSphere();
 };

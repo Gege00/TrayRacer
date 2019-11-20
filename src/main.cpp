@@ -36,7 +36,7 @@ math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 
 
 Hitable *random_scene() {
-	int n = 100;
+	int n = 10000;
 	Hitable **list = new Hitable*[n + 1];
 	list[0] = new Sphere(math::vec3(0, -1000, 0), 1000, new Diffuse(math::vec3(0.5, 0.5, 0.5)));
 	int i = 1;

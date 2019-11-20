@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aabb.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\dielectric.cpp" />
     <ClCompile Include="src\diffuse.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="src\vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aabb.h" />
     <ClInclude Include="src\dielectric.h" />
     <ClInclude Include="src\diffuse.h" />
     <ClInclude Include="src\material.h" />

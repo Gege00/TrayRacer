@@ -43,3 +43,11 @@ math::vec3 Sphere::randomPointInUnitSphere() {
 	}
 		
 }
+
+
+bool Sphere::boundingBox(float t0, float t1, AABB& aabb) const
+{
+	aabb = AABB(center - math::vec3(radius), center + math::vec3(radius));
+		return true;
+	
+}

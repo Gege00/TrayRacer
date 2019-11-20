@@ -7,14 +7,25 @@ namespace math {
 
 	public:
 
-		float x, z, y;
+		union
+		{
+			float a[3];
+			float x, y, z;
+		};
 
 		vec3() { };
 		vec3(float t)
-			:x(t), y(t), z(t) {};
-		vec3(float x, float y, float z)
-			:x(x), y(y), z(z) {	};
+		{
+			x = y = z = t;
 
+		}
+		vec3(float x, float y, float z)
+		{
+			this->x = x;
+			this->y = y;
+			this->z = z;
+		}
+		
 		inline vec3& operator+=(const vec3 &v2);
 		inline vec3& operator-=(const vec3 &v2);
 		inline vec3& operator*=(const vec3 &v2);

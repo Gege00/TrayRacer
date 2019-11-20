@@ -39,6 +39,9 @@
     <ClCompile Include="src\dielectric.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="aabb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\hitable.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
