@@ -24,6 +24,8 @@ public:
 
 
 	bool hit(const Ray &r, float tmin, float tmax) const;
-	
+
+
+	static AABB overlap(AABB& b0, AABB& b1);
 };
 

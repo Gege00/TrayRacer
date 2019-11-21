@@ -16,6 +16,8 @@
 #include "dielectric.h"
 #include "utils.h"
 #include "math.h"
+#include "texture.h"
+#include "node.h"
 
 math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 	hitRecord tRec;
@@ -34,25 +36,23 @@ math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 	return (1.0 - t)*math::vec3(1.0) + t * math::vec3(0.5, 0.7, 1.0);
 }
 
+Texture *checker = new CheckerTexture(
+	new ConstantTexture(math::vec3(0.2, 0.3, 0.1)),
+	new ConstantTexture(math::vec3(0.9, 0.9, 0.9)));
 
 Hitable *random_scene() {
-	int n = 10000;
+	int n =5000;
 	Hitable **list = new Hitable*[n + 1];
-	list[0] = new Sphere(math::vec3(0, -1000, 0), 1000, new Diffuse(math::vec3(0.5, 0.5, 0.5)));
+	list[0] = new Sphere(math::vec3(0, -1000, 0), 1000, new Diffuse(checker));
 	int i = 1;
-	for (int a = -11; a < 11; a++) {
-		for (int b = -11; b < 11; b++) {
+	for (int a = -5; a < 5; a++) {
+		for (int b = -5; b < 5; b++) {
 			float choose_mat = utils::randDouble();
 			math::vec3 center(a + utils::randDouble(), 0.2, b + 0.9*utils::randDouble());
 			if ((center - math::vec3(4, 0.2, 0)).length() > 0.9) {
 				if (choose_mat < 0.8) {  // diffuse
 					list[i++] = new Sphere(center, 0.2,
-						new Diffuse(math::vec3(
-							utils::randDouble()*utils::randDouble(),
-							utils::randDouble()*utils::randDouble(),
-							utils::randDouble()*utils::randDouble())
-						)
-					);
+						new Diffuse(checker));
 				}
 				else if (choose_mat < 0.95) { // metal
 					list[i++] = new Sphere(center, 0.2,
@@ -69,11 +69,24 @@ Hitable *random_scene() {
 	}
 
 	list[i++] = new Sphere(math::vec3(0, 1, 0), 1.0, new Dielectric(1.5));
-	list[i++] = new Sphere(math::vec3(-4, 1, 0), 1.0, new Diffuse(math::vec3(0.4, 0.2, 0.1)));
+	list[i++] = new Sphere(math::vec3(-4, 1, 0), 1.0, new Diffuse(checker));
 	list[i++] = new Sphere(math::vec3(4, 1, 0), 1.0, new Metal(math::vec3(0.7, 0.6, 0.5), 0.0));
 
-	return new Hitablelist(list, i);
+//	return new Hitablelist(list, i);
+	return new Node(list, i,0.01,10);
 }
+
+Hitable *two_spheres() {
+	
+	int n = 50;
+	Hitable **list = new Hitable*[n + 1];
+	list[0] = new Sphere(math::vec3(0, -10, 0), 10, new Diffuse(checker));
+	list[1] = new Sphere(math::vec3(0, 10, 0), 10, new Diffuse(checker));
+	//return new Hitablelist(list, 2);
+	return new Node(list, 2, 0, 1);
+	
+}
+
 
 
 
@@ -86,6 +99,7 @@ int main() {
 	outfile << "P3\n" << nX << " " << nY << "\n255\n";
 	std::cout << "P3\n" << nX << " " << nY << "\n255\n";
 
+	
 
 	float R = cos(M_PI / 4);
 			
@@ -94,12 +108,11 @@ int main() {
 
 	
 	Hitable *w = random_scene();
-	math::vec3 lookFrom(3, 3, 2);
-	math::vec3 lookAt(0, 0, -1);
+	math::vec3 lookFrom(13, 2, 3);
+	math::vec3 lookAt(0, 0, 0);
 	
 
-	Camera cam(lookFrom,lookAt,math::vec3(0,1,0),90,(float)nX/(float)nY,2.0f, (lookFrom - lookAt).length());
-
+	Camera cam(lookFrom,lookAt,math::vec3(0,1,0),20,(float)nX/(float)nY,1.0f, (lookFrom - lookAt).length());
 
 	for (int j = nY - 1; j >= 0; j--) {
 		for (int i = 0; i < nX; i++) {

@@ -39,7 +39,13 @@
     <ClCompile Include="src\dielectric.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aabb.cpp">
+    <ClCompile Include="src\aabb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +83,13 @@
     <ClInclude Include="src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="aabb.h">
+    <ClInclude Include="src\aabb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

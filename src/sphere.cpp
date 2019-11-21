@@ -7,7 +7,7 @@ bool Sphere::hit(const Ray & ray, float t_min, float t_max, hitRecord & hit) con
 	float a = math::dot(ray.direction(), ray.direction());
 	float b = math::dot(ray.direction(), oc);
 	float c = math::dot(oc, oc) - radius * radius;
-	float discriminant = b * b - a*c;
+	float discriminant = b * b - a * c;
 	if (discriminant > 0) {
 		float t = (-b - sqrt(b*b - a * c)) / a;
 		if (t< t_max && t> t_min) {
@@ -41,13 +41,13 @@ math::vec3 Sphere::randomPointInUnitSphere() {
 		return p;
 
 	}
-		
+
 }
 
 
 bool Sphere::boundingBox(float t0, float t1, AABB& aabb) const
 {
 	aabb = AABB(center - math::vec3(radius), center + math::vec3(radius));
-		return true;
-	
+	return true;
+
 }

@@ -17,3 +17,20 @@ bool Hitablelist::hit(const Ray & ray, float t_min, float t_max, hitRecord& rec)
 	return isHit;
 	
 }
+
+
+bool Hitablelist::boundingBox(float t0, float t1, AABB& aabb) const {
+	if (listSize < 1) return false;
+	AABB temp;
+	bool isHit = list[0]->boundingBox(t0, t1, temp);
+	if (!isHit) return false;
+	aabb=temp;
+	for (int i=1; i<listSize; i++) {
+
+		if (list[i]->boundingBox(t0, t1, temp))
+			aabb = AABB::overlap(aabb, temp);
+		else return false;
+		
+	}
+	return true;
+}

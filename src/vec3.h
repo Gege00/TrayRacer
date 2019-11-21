@@ -9,14 +9,19 @@ namespace math {
 
 		union
 		{
-			float a[3];
-			float x, y, z;
+			struct {
+				float a[3];
+			};
+			struct {
+				float x, y, z;
+			};
 		};
 
 		vec3() { };
 		vec3(float t)
 		{
-			x = y = z = t;
+			x = t;
+			y = t; z = t;
 
 		}
 		vec3(float x, float y, float z)
@@ -26,6 +31,9 @@ namespace math {
 			this->z = z;
 		}
 		
+		float operator[] (int i) const { return a[i]; }
+		float& operator[] (int i) { return a[i]; }
+		
 		inline vec3& operator+=(const vec3 &v2);
 		inline vec3& operator-=(const vec3 &v2);
 		inline vec3& operator*=(const vec3 &v2);
@@ -33,6 +41,9 @@ namespace math {
 		inline vec3& operator*=(const float f);
 		inline vec3& operator/=(const float f);
 
+
+
+		
 		inline friend vec3 operator *(const vec3& v1, const vec3& v2) {
 			return vec3(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
 		}
