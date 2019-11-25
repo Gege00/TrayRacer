@@ -8,7 +8,9 @@ class Material
 public:
 
   	 	virtual bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const = 0;
-
+		virtual math::vec3 emitted(float u, float v, const math::vec3& p) const {
+			return math::vec3(0);
+		}
 		math::vec3 reflect(const math::vec3& v, const math::vec3& n) const {
 			return v - 2 * math::dot(v, n)*n;
 		}

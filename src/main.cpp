@@ -18,6 +18,8 @@
 #include "math.h"
 #include "texture.h"
 #include "node.h"
+#include "diffuselight.h"
+#include "rectangle.h"
 
 math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 	hitRecord tRec;
@@ -25,15 +27,17 @@ math::vec3 color(const Ray& ray, Hitable *w, int depth) {
 	if (w->hit(ray, 0.001, FLT_MAX, tRec)) {
 		Ray scatteredRay;
 		math::vec3 attenuation;
+		math::vec3 emitted = tRec.matPtr->emitted(tRec.u, tRec.v, tRec.p);
 		if (depth < 50 && tRec.matPtr->scatter(ray, tRec, attenuation, scatteredRay)) {
-			return attenuation * color(scatteredRay, w, depth++);
+			return   emitted + attenuation * color(scatteredRay, w, depth++);
 		}
-		return math::vec3(0.0);
+		else return emitted;
 	}
 
-	math::vec3 unitDirection = math::unit_vec(ray.direction());
-	float t = 0.5f *(unitDirection.y + 1.0f);
-	return (1.0 - t)*math::vec3(1.0) + t * math::vec3(0.5, 0.7, 1.0);
+	//math::vec3 unitDirection = math::unit_vec(ray.direction());
+	//float t = 0.5f *(unitDirection.y + 1.0f);
+	//return (1.0 - t)*math::vec3(1.0) + t * math::vec3(0.5, 0.7, 1.0);
+	return math::vec3(0);
 }
 
 Texture *checker = new CheckerTexture(
@@ -73,7 +77,7 @@ Hitable *random_scene() {
 	list[i++] = new Sphere(math::vec3(4, 1, 0), 1.0, new Metal(math::vec3(0.7, 0.6, 0.5), 0.0));
 
 //	return new Hitablelist(list, i);
-	return new Node(list, i,0.01,10);
+	return new Hitablelist(list, i);
 }
 
 Hitable *two_spheres() {
@@ -87,13 +91,47 @@ Hitable *two_spheres() {
 	
 }
 
+Hitable *simpleLight() {
+	Hitable** list = new Hitable*[4];
+	list[0] = new Sphere(math::vec3(0, -1000, 0), 1000, new Diffuse(checker));
+	list[1] = new Sphere(math::vec3(0, 2, 0), 2, new Diffuse(checker));
+	list[2] = new Sphere(math::vec3(0, 7, 0), 2, new DiffuseLight( new ConstantTexture(math::vec3(4))));
+	list[3] = new rect::XY(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(math::vec3(4))));
+
+	return new Hitablelist(list, 4);
+	
+}
+
+
+Hitable *cornellBox() {
+
+	Hitable **list = new Hitable*[5];
+	int i = 0;
+
+	Material *red = new   Diffuse(new ConstantTexture(math::vec3(0.65, 0.05, 0.05)));
+	Material *white = new Diffuse(new ConstantTexture(math::vec3(0.73, 0.73, 0.73)));
+	Material *green = new Diffuse(new ConstantTexture(math::vec3(0.12, 0.45, 0.15)));
+	Material *light = new DiffuseLight(new ConstantTexture(math::vec3(15, 15, 15)));
+
+
+	list[i++] = new rect::YZ(0, 555, 0, 555, 555, green,true); //changed Z1
+	list[i++] = new rect::YZ(0, 555, 0, 555, 0, red);
+	list[i++] = new rect::XZ(213,343,227, 332, 554, light);
+	list[i++] = new rect::XZ(0,555,0,555,555,white,true);
+	list[i++] = new rect::XZ(0, 555, 0, 555, 0, white);
+	list[i++] = new rect::XY(0, 555, 0, 555, 555, white,true);
+
+	return new Hitablelist(list, i);
+	
+}
+
 
 
 
 int main() {
 
-	int nX = 400;
-	int nY = 200;
+	int nX = 800;
+	int nY = 600;
 	int ns = 100;
 	std::ofstream outfile("render.ppm", std::ios_base::out);
 	outfile << "P3\n" << nX << " " << nY << "\n255\n";
@@ -107,12 +145,15 @@ int main() {
 	//hList[1] = new Sphere(math::vec3(R, 0, -1), R, new Diffuse(math::vec3(1, 0, 0)));
 
 	
-	Hitable *w = random_scene();
-	math::vec3 lookFrom(13, 2, 3);
-	math::vec3 lookAt(0, 0, 0);
-	
+	Hitable *w = cornellBox();
+	math::vec3 lookFrom(278,278,-800);
+	math::vec3 lookAt(278, 278, 0);
 
-	Camera cam(lookFrom,lookAt,math::vec3(0,1,0),20,(float)nX/(float)nY,1.0f, (lookFrom - lookAt).length());
+	float dist = 10;
+	float apert = 0;
+	float fov = 40.0;
+
+	Camera cam(lookFrom,lookAt,math::vec3(0,1,0),fov,(float)nX/(float)nY,apert,dist);
 
 	for (int j = nY - 1; j >= 0; j--) {
 		for (int i = 0; i < nX; i++) {
