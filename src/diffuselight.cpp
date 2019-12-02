@@ -13,5 +13,15 @@ float DiffuseLight::scatteringPdf(const Ray& rayIn, const hitRecord& hit, Ray& s
 
 math::vec3 DiffuseLight::emitted(float u, float v, const math::vec3& p) const {
 
+	
 	return _emitTexture->value(u, v, p);
+}
+
+
+math::vec3 DiffuseLight::emitted(const Ray& ray, const hitRecord& hit, float u, float v, const math::vec3& p) const {
+
+	if(math::dot(hit.normal,ray.direction())<0.0f) {
+		return _emitTexture->value(u, v, p);
+	}
+	return math::vec3(0);
 }

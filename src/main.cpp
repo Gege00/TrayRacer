@@ -8,19 +8,35 @@
 
 
 math::vec3 color(const Ray& ray, Hitable *w, int depth) {
-	hitRecord tRec;
+	hitRecord hit;
 
-	if (w->hit(ray, 0.001, FLT_MAX, tRec)) {
+	if (w->hit(ray, 0.001, FLT_MAX, hit)) {
 		Ray scatteredRay;
 		math::vec3 attenuation;
 		float pdf;
-		math::vec3 emitted = tRec.matPtr->emitted(tRec.u, tRec.v, tRec.p);
-		if (depth < 50 && tRec.matPtr->scatter(ray, tRec, attenuation, scatteredRay,pdf)) {
+		math::vec3 emitted = hit.matPtr->emitted(hit.u, hit.v, hit.p);
+		if (depth < 50 && hit.matPtr->scatter(ray, hit, attenuation, scatteredRay,pdf)) {
 
+
+			math::vec3 light = math::vec3(213 + utils::randDouble()*(343 - 213),
+				554,
+				227 + utils::randDouble()*(332 - 227));
+			math::vec3 toLight = light - hit.p;
+			float distance_squared = light.sqr_len();
+			toLight.make_unit_vector();
+			if (math::dot(toLight, hit.normal) < 0)
+				return emitted;
+			float lightArea = (343 - 213)*(332 - 227);
+			float lightCosine = fabs(toLight.y);
+			if (lightCosine < 0.000001)
+				return emitted;
+			pdf = distance_squared / (lightCosine * lightArea);
+			scatteredRay = Ray(hit.p, toLight);
+			
 			
  			return   emitted + 
 				attenuation
-				*tRec.matPtr->scatteringPdf(ray,tRec,scatteredRay)
+				*hit.matPtr->scatteringPdf(ray,hit,scatteredRay)
 				*color(scatteredRay, w, depth+1) / pdf;
 		}
 		 return emitted;
@@ -104,7 +120,7 @@ void cornellBox(Hitable **scene,Camera **cam, float aspect) {
 
 
 	list[i++] = new primitive::rect::YZ(0, 555, 0, 555, 555, green,true); 	list[i++] = new primitive::rect::YZ(0, 555, 0, 555, 0, red);
-	list[i++] = new primitive::rect::XZ(213,343,227, 332, 554, light);
+	list[i++] = new primitive::rect::XZ(213,343,227, 332, 554, light,true);
 	list[i++] = new primitive::rect::XZ(0,555,0,555,555,white,true);
 	list[i++] = new primitive::rect::XZ(0, 555, 0, 555, 0, white);
 	list[i++] = new primitive::rect::XY(0, 555, 0, 555, 555, white,true);

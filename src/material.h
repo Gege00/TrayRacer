@@ -18,6 +18,10 @@ public:
 		virtual math::vec3 emitted(float u, float v, const math::vec3& p) const {
 			return math::vec3(0);
 		}
+
+		virtual math::vec3 emitted(const Ray& ray, const hitRecord& hit, float u, float v, const math::vec3& p) const {
+			return math::vec3(0);
+		}
 		math::vec3 reflect(const math::vec3& v, const math::vec3& n) const {
 			return v - 2 * math::dot(v, n)*n;
 		}

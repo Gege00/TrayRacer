@@ -81,7 +81,7 @@ namespace math {
 			return x * x + y * y + z * z;
 		}
 
-		inline void  make_unit_vector();
+		void  make_unit_vector();
 
 
 	};

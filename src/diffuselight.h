@@ -19,5 +19,8 @@ public:
 	virtual float scatteringPdf(const Ray& rayIn, const hitRecord& hit, Ray& scattered) const;
 	
 	virtual math::vec3 emitted(float u, float v, const math::vec3& p) const;
+
+
+	math::vec3 emitted(const Ray& ray, const hitRecord& hit, float u, float v, const math::vec3& p) const override;
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <random>
+#include <corecrt_math_defines.h>
 
 namespace utils {
 
@@ -21,6 +22,18 @@ namespace utils {
 		return point;
 
 	}
+
+
+	inline math::vec3 randomCosineDir() {
+		float r1 = randDouble();
+		float r2 = randDouble();
+		float z = sqrt(1 - r2);
+		float phi = 2 * M_PI*r1;
+		float x = cos(phi)*sqrt(r2);
+		float y = sin(phi)*sqrt(r2);
+		return math::vec3(x, y, z);
+	}
+	
 
 	inline float ffmin(float a, float b) { return a < b ? a : b; }
 	inline float ffmax(float a, float b) { return a > b ? a : b; }
