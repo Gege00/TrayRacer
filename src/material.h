@@ -7,7 +7,14 @@ class Material
 {
 public:
 
-  	 	virtual bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const = 0;
+  	 	virtual bool scatter(const Ray& rayIn, const hitRecord& hit, math::vec3& attenuation, Ray& scattered, float& pdf) const {
+			return false;
+  	 	};
+		virtual float scatteringPdf(const Ray& rayIn, const hitRecord& hit,const Ray& scattered) const {
+			return 0;
+		}
+
+
 		virtual math::vec3 emitted(float u, float v, const math::vec3& p) const {
 			return math::vec3(0);
 		}

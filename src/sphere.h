@@ -1,6 +1,8 @@
 #pragma once
 #include "hitable.h"
 
+namespace primitive{
+
 class Sphere: public Hitable {
 
 public:
@@ -20,3 +22,4 @@ public:
 	static math::vec3 randomPointInUnitSphere();
 };
 
+}

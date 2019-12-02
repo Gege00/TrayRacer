@@ -13,7 +13,11 @@ public:
 	~DiffuseLight();
 
 
-	virtual bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const;
+	virtual bool scatter(const Ray& rayIn, const hitRecord& hit, math::vec3& attenuation, Ray& scattered, float& pdf) const;
+
+
+	virtual float scatteringPdf(const Ray& rayIn, const hitRecord& hit, Ray& scattered) const;
+	
 	virtual math::vec3 emitted(float u, float v, const math::vec3& p) const;
 };
 

@@ -14,7 +14,7 @@ public:
 		this->fuzz = fuzz > 1.0f ? 1.0f : fuzz;
 	};
 
-	virtual bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const;
+	virtual bool scatter(const Ray& rayIn, const hitRecord& hit, math::vec3& attenuation, Ray& scattered, float& pdf) const;
 	 
 	
 	

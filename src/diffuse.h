@@ -14,5 +14,6 @@ public:
 	Diffuse(Texture* texture)
 		:albedo(texture)	{};
 	
-	virtual bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const;
+	bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered,float& pdf) const override;
+	float scatteringPdf(const Ray& rayIn, const hitRecord& hit,const Ray& scattered) const override;
 };

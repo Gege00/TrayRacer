@@ -1,7 +1,7 @@
 #include "sphere.h"
 #include <random>
 
-bool Sphere::hit(const Ray & ray, float t_min, float t_max, hitRecord & hit) const
+bool primitive::Sphere::hit(const Ray & ray, float t_min, float t_max, hitRecord & hit) const
 {
 	math::vec3 oc = ray.origin() - center;
 	float a = math::dot(ray.direction(), ray.direction());
@@ -31,21 +31,21 @@ bool Sphere::hit(const Ray & ray, float t_min, float t_max, hitRecord & hit) con
 }
 
 
-math::vec3 Sphere::randomPointInUnitSphere() {
+math::vec3 primitive::Sphere::randomPointInUnitSphere() {
 	{
 		math::vec3 p;
 		do {
 			p = 2.0*math::vec3((rand() / (RAND_MAX + 1.0)), (rand() / (RAND_MAX + 1.0)), (rand() / (RAND_MAX + 1.0))) - math::vec3(1);
 		} while (p.sqr_len() >= 1.0);
 
-		return p;
+		return  math::unit_vec(p);
 
 	}
 
 }
 
 
-bool Sphere::boundingBox(float t0, float t1, AABB& aabb) const
+bool primitive::Sphere::boundingBox(float t0, float t1, AABB& aabb) const
 {
 	aabb = AABB(center - math::vec3(radius), center + math::vec3(radius));
 	return true;

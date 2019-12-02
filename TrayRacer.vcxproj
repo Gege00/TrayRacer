@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\box.cpp" />
     <ClCompile Include="src\aabb.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\dielectric.cpp" />
@@ -141,11 +142,14 @@
     <ClCompile Include="src\node.cpp" />
     <ClCompile Include="src\rectangle.cpp" />
     <ClCompile Include="src\sphere.cpp" />
+    <ClCompile Include="src\translate.cpp" />
     <ClCompile Include="src\vec3.cpp" />
     <ClCompile Include="src\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\box.h" />
     <ClInclude Include="src\aabb.h" />
+    <ClInclude Include="src\common.h" />
     <ClInclude Include="src\dielectric.h" />
     <ClInclude Include="src\diffuse.h" />
     <ClInclude Include="src\diffuselight.h" />
@@ -158,6 +162,7 @@
     <ClInclude Include="src\ray.h" />
     <ClInclude Include="src\rectangle.h" />
     <ClInclude Include="src\sphere.h" />
+    <ClInclude Include="src\translate.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\vec3.h" />
     <ClInclude Include="src\texture.h" />

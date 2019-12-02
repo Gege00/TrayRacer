@@ -2,9 +2,9 @@
 #include "utils.h"
 
 
-bool Dielectric::scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const {
+bool Dielectric::scatter(const Ray& rayIn, const hitRecord& hit, math::vec3& attenuation, Ray& scattered, float& pdf) const {
 
-	math::vec3 reflected = reflect(rayIn.direction(), hRec.normal);
+	math::vec3 reflected = reflect(rayIn.direction(), hit.normal);
 
 	float niNt;
 	math::vec3 outNorm;
@@ -14,16 +14,16 @@ bool Dielectric::scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& at
 	float reflectProb;
 	float cosine;
 	
-	if(math::dot(rayIn.direction(),hRec.normal)>0) {
-		outNorm =  hRec.normal *-1;
+	if(math::dot(rayIn.direction(),hit.normal)>0) {
+		outNorm =  hit.normal *-1;
 		niNt = ref_idx;
-		cosine = ref_idx * math::dot(rayIn.direction(), hRec.normal) / rayIn.direction().length();
+		cosine = ref_idx * math::dot(rayIn.direction(), hit.normal) / rayIn.direction().length();
 	}
 
 	else {
-		outNorm = hRec.normal;
+		outNorm = hit.normal;
 		niNt = 1.0 / ref_idx;
-		cosine = -math::dot(rayIn.direction(), hRec.normal) / rayIn.direction().length();
+		cosine = -math::dot(rayIn.direction(), hit.normal) / rayIn.direction().length();
 
 	}
 	if (refract(rayIn.direction(), outNorm, niNt, refracted)) {
@@ -32,10 +32,10 @@ bool Dielectric::scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& at
 		reflectProb = 1.0f;
 	}
 	if(utils::randDouble()<reflectProb) {
-		scattered = Ray(hRec.p, reflected);
+		scattered = Ray(hit.p, reflected);
 	}
 	else {
-		scattered = Ray(hRec.p, refracted);
+		scattered = Ray(hit.p, refracted);
 	}
 	
 	return true;

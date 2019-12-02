@@ -13,7 +13,7 @@ public:
 
 	
 	
-	bool scatter(const Ray& rayIn, const hitRecord& hRec, math::vec3& attenuation, Ray& scattered) const override;
+	bool scatter(const Ray& rayIn, const hitRecord& hit, math::vec3& attenuation, Ray& scattered, float& pdf) const override;
 
 	bool refract(const math::vec3& v, const math::vec3& n, float niNt, math::vec3& refracted) const;
 };
